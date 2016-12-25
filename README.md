@@ -1,4 +1,4 @@
-# dkom2016
-SAP d-kom 2016 Karlsruhe
+# dkom2017
+SAP d-kom 2017 Karlsruhe
 
-Slides: https://larshp.github.io/dkom2016/
+Slides: https://larshp.github.io/dkom2017/
