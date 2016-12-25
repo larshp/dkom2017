@@ -33,12 +33,14 @@ function update() {
       case null:
       case "runOut":
         random(squares[i]);
+        squares[i].classList.remove("runFall");
         squares[i].classList.remove("runOut");
         squares[i].classList.add("runIn");
         states[i] = "runIn";
         break;
       case "runIn":
         if (Math.ceil(Math.random()*100) < 50) {
+          squares[i].classList.remove("runFall");
           squares[i].classList.remove("runIn");
           squares[i].classList.add("runOut");
           states[i] = "runOut";
@@ -53,7 +55,9 @@ function update() {
 function hide() {
   clearTimeout(timer);
   for(let i=0; i<squares.length; i++) {
-    squares[i].style.display = 'none';
+    squares[i].classList.remove("runIn");
+    squares[i].classList.remove("runOut");
+    squares[i].classList.add("runFall");
     states[i] = null;
   }
 }

@@ -1,8 +1,8 @@
 .square {
-	position: absolute;
-	width: 10px;
-	height: 10px;
-	display: none;
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  display: none;
 }
 
 @keyframes fadeIn {
@@ -31,4 +31,9 @@
 .runOut {
   animation: fadeOut 3s ease;
   animation-fill-mode: forwards;
+}
+
+.runFall {
+  transform: translateY(calc(100vh));
+  transition: transform 1s ease-in;
 }
