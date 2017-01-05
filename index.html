@@ -4,11 +4,12 @@
 		<meta charset="utf-8">
 		<link rel="icon" href="favicon.ico" type="image/x-icon">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-		<link rel="stylesheet" href="ext/font-awesome-4.6.3/css/font-awesome.min.css">
-		<link rel="stylesheet" href="ext/octicons/octicons.css">
 
 		<title>dkom2017 - abapGit</title>
 
+		<link rel="stylesheet" href="ext/font-awesome-4.6.3/css/font-awesome.min.css">
+		<link rel="stylesheet" href="ext/octicons/octicons.css">
+		<link rel="stylesheet" href="ext/prism/prism.css" />
 		<link rel="stylesheet" href="ext/reveal.js-3.3.0/css/reveal.css">
 		<link rel="stylesheet" href="theme.css">
 		<link rel="stylesheet" href="squares.css">
@@ -135,6 +136,215 @@
 </section>
 
 <section>
+<h3>Design Goals</h3>
+<ul>
+<li>Easy installation</li>
+<li>Easy upgrade</li>
+<li>Small system footprint</li>
+<li>Code readable in git repository</li>
+</ul>
+</section>
+
+<section>
+<h3>Connectivity</h3>
+<pre><code class="language-abap">cl_http_client=>create_by_url(
+  EXPORTING
+    url    = 'https://github.com'
+    ssl_id = 'ANONYM'
+  IMPORTING
+    client = li_client ).
+li_client->request->set_cdata( '' ).
+li_client->request->set_header_field(
+  name  = '~request_method'
+  value = 'GET' ).
+li_client->request->set_header_field(
+  name  = 'user-agent'
+  value = 'git/abapGitv1.9.7' ).
+li_client->request->set_header_field(
+  name  = '~request_uri'
+  value = '/larshp/abapOpenChecks.git/info/refs?service=git-upload-pack' ).
+li_client->send( ).
+</code></pre>
+<pre class="fragment fade-up">
+001e# service=git-upload-pack
+000000fb868c5c06d2b51f6b83668f80922260f42a7ff4ca HEAD multi_ack thin-pack ...
+003f868c5c06d2b51f6b83668f80922260f42a7ff4ca refs/heads/master
+0040c1398119983b0ae48ec4091d9519194768a71bae refs/pull/268/head
+0000
+</pre>
+</section>
+
+<section>
+<section>
+<h3>Serialization</h3>
+<img src="img/hello.png" class="plain">
+</section>
+<section>
+<u>zhello.prog.abap</u>
+<pre><code class="language-abap">REPORT zhello.
+
+WRITE 'hello'.
+</code></pre>
+<u>zhello.prog.xml</u>
+<pre><code class="language-markup">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;abapGit version=&quot;v1.0.0&quot; serializer=&quot;LCL_OBJECT_PROG&quot; serializer_version=&quot;v1.0.0&quot;&gt;
+ &lt;asx:abap xmlns:asx=&quot;http://www.sap.com/abapxml&quot; version=&quot;1.0&quot;&gt;
+  &lt;asx:values&gt;
+   &lt;PROGDIR&gt;
+    &lt;NAME&gt;ZHELLO&lt;/NAME&gt;
+    &lt;STATE&gt;A&lt;/STATE&gt;
+    &lt;SQLX/&gt;
+    &lt;EDTX/&gt;
+    &lt;VARCL&gt;X&lt;/VARCL&gt;
+    &lt;DBAPL/&gt;
+    &lt;DBNA/&gt;
+    &lt;CLAS/&gt;
+    &lt;TYPE/&gt;
+    &lt;OCCURS/&gt;
+    &lt;SUBC&gt;1&lt;/SUBC&gt;
+    &lt;APPL/&gt;
+    &lt;SECU/&gt;
+    &lt;CNAM/&gt;
+    &lt;CDAT&gt;0000-00-00&lt;/CDAT&gt;
+    &lt;UNAM/&gt;
+    &lt;UDAT&gt;0000-00-00&lt;/UDAT&gt;
+    &lt;VERN/&gt;
+    &lt;LEVL/&gt;
+    &lt;RSTAT/&gt;
+    &lt;RMAND/&gt;
+    &lt;RLOAD&gt;E&lt;/RLOAD&gt;
+    &lt;FIXPT&gt;X&lt;/FIXPT&gt;
+    &lt;SSET/&gt;
+    &lt;SDATE&gt;0000-00-00&lt;/SDATE&gt;
+    &lt;STIME/&gt;
+    &lt;IDATE&gt;0000-00-00&lt;/IDATE&gt;
+    &lt;ITIME/&gt;
+    &lt;LDBNAME/&gt;
+    &lt;UCCHECK&gt;X&lt;/UCCHECK&gt;
+   &lt;/PROGDIR&gt;
+   &lt;DYNPROS/&gt;
+   &lt;CUA&gt;
+    &lt;ADM&gt;
+     &lt;ACTCODE/&gt;
+     &lt;MENCODE/&gt;
+     &lt;PFKCODE/&gt;
+     &lt;DEFAULTACT/&gt;
+     &lt;DEFAULTPFK/&gt;
+     &lt;MOD_LANGU/&gt;
+    &lt;/ADM&gt;
+    &lt;STA/&gt;
+    &lt;FUN/&gt;
+    &lt;MEN/&gt;
+    &lt;MTX/&gt;
+    &lt;ACT/&gt;
+    &lt;BUT/&gt;
+    &lt;PFK/&gt;
+    &lt;SET/&gt;
+    &lt;DOC/&gt;
+    &lt;TIT/&gt;
+    &lt;BIV/&gt;
+   &lt;/CUA&gt;
+   &lt;TPOOL&gt;
+    &lt;item&gt;
+     &lt;ID&gt;R&lt;/ID&gt;
+     &lt;KEY/&gt;
+     &lt;ENTRY&gt;test&lt;/ENTRY&gt;
+     &lt;LENGTH&gt;4&lt;/LENGTH&gt;
+     &lt;SPLIT/&gt;
+    &lt;/item&gt;
+   &lt;/TPOOL&gt;
+  &lt;/asx:values&gt;
+ &lt;/asx:abap&gt;
+&lt;/abapGit&gt;
+</code></pre>
+</section>
+
+<section>
+<h3>And deserialization</h3>
+All files can be imported back into the ABAP system
+</section>
+</section>
+
+<section>
+<h3>Supported object types</h3>
+<table>
+<tr>
+<td>ACID</td>
+<td>AUTH</td>
+<td>CLAS</td>
+<td>DOCT</td>
+<td>DOCV</td>
+</tr><tr>
+<td>DOMA</td>
+<td>DTEL</td>
+<td>ENHC</td>
+<td>ENHO</td>
+<td>ENHS</td>
+</tr><tr>
+<td>ENQU</td>
+<td>FUGR</td>
+<td>IARP</td>
+<td>IASP</td>
+<td>IATU</td>
+</tr><tr>
+<td>MSAG</td>
+<td>NROB</td>
+<td>PARA</td>
+<td>PINF</td>
+<td>PROG</td>
+</tr><tr>
+<td>SFBF</td>
+<td>SFBS</td>
+<td>SFSW</td>
+<td>SHI3</td>
+<td>SHLP</td>
+</tr><tr>
+<td>SICF</td>
+<td>SPLO</td>
+<td>SSFO</td>
+<td>SSST</td>
+<td>SMIM</td>
+</tr><tr>
+<td>SUSC</td>
+<td>SUSO</td>
+<td>TABL</td>
+<td>TOBJ</td>
+<td>TRAN</td>
+</tr><tr>
+<td>TTYP</td>
+<td>TYPE</td>
+<td>VCLS</td>
+<td>VIEW</td>
+<td>W3HT</td>
+</tr><tr>
+<td>W3MI</td>
+<td>WDYA</td>
+<td>WDYN</td>
+<td>WEBI</td>
+<td>XSLT</td>
+</tr>
+</table>
+</section>
+
+<section>
+<h3>Github Support</h3>
+<table>
+<tr><td>
+<u>The HTTP header incident</u><br>
+<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec4.html#sec4.2">rfc2616-sec4.html#sec4.2</a><br>
+"Field names are case-insensitive"
+</td><td>
+<br>
+<i class="fa fa-thumbs-o-up fa-5x plain"></i>
+</td></tr>
+<tr><td colspan="2">
+<u>The SHA1 mismatch</u><br>
+Git protocol: "Server and client MUST use lowercase for obj-id, both MUST treat obj-id as case-insensitive."<br>
+</td></tr>
+</table>
+</section>
+
+<section>
 <h3>Features: Works With</h3>
 <table>
 <tr><td>
@@ -155,6 +365,73 @@
 </td></tr>
 </table>
 </section>
+
+<section>
+<h3>Features: Explore</h3>
+<img src="img/abapgit_1_17_17.png" class="plain" width="800px">
+</section>
+
+<section>
+<h3>Features: Diff</h3>
+todo
+</section>
+
+<section>
+<h3>Features: Offline projects</h3>
+<img src="img/offline.png" class="plain">
+</section>
+
+<section>
+<h3>Features: Branches</h3>
+<img src="img/branch_overview.png" height="600px" class="plain">
+</section>
+
+<section>
+<div>
+<h3>Features: Background mode</h3>
+<img src="img/background.png" class="plain" height="550px">
+</div>
+</section>
+
+<section>
+<h3>Use case: Share code</h3>
+<img src="img/share.svg" class="plain">
+</section>
+
+<section>
+<h3>Use case: Extra visibility</h3>
+<img src="img/server.svg" class="plain" width=70%><br>
+<a href="https://github.com/larshp/abapGit/wiki/Using-abapGit-and-abapGitServer-for-regular-backup">Setup Guide</a>
+</section>
+
+<section>
+<h3>Labs Preview: Signing Commits</h3>
+todo, img
+<a href="https://github.com/larshp/abapGit/issues/358">https://github.com/larshp/abapGit/issues/358</a>
+</section>
+
+<section>
+<h3>ABAP</h3>
+Doing different?
+</section>
+
+<section>
+<h3>DEMO</h3>
+</section>
+
+<section>
+<h3>Contribute</h3>
+<a href="http://abapgit.org">http://abapgit.org</a>
+<i class="fa fa-sun-o plain"></i><br>
+<br>
+<h3>Slides</h3>
+<a href="https://larshp.github.io/dkom2017/">https://larshp.github.io/dkom2017/</a><br>
+<br>
+<br>
+<a href="https://twitter.com/LarsHvam"><i class="fa fa-twitter plain"></i> @LarsHvam</a>
+</section>
+</div>
+</div>
 
 </div>
 </div>
@@ -178,6 +455,7 @@ Reveal.initialize({
 Reveal.addEventListener('ready', squaresSlideReady);
 Reveal.addEventListener('slidechanged', squaresSlideChanged);
 </script>
+<script src="ext/prism/prism.js"></script>
 
 </body>
 </html>
